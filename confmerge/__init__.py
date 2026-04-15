@@ -11,6 +11,11 @@ from confmerge.sources import load_env
 from confmerge.interpolate import interpolate
 from confmerge.pipeline import load_config
 from confmerge.schema import validate, SchemaError
+from confmerge.policies import (
+    MergePolicy,
+    get_policy_for_key,
+    is_more_restrictive,
+)
 from confmerge.profiles import (
     ProfileRegistry,
     Profile,
@@ -53,6 +58,10 @@ __all__ = [
     "load_config",
     "validate",
     "SchemaError",
+    # Policies
+    "MergePolicy",
+    "get_policy_for_key",
+    "is_more_restrictive",
     # Profiles
     "ProfileRegistry",
     "Profile",

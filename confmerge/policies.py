@@ -73,15 +73,9 @@ def is_more_restrictive(override_value, base_value):
     if type(override_value) != type(base_value):
         return True
 
-    # Booleans: True (enabled/required) is more restrictive than False.
-    # Must check bool BEFORE int/float because bool is a subclass of int.
-    if isinstance(override_value, bool):
+    # For comparable values, check restrictiveness
+    if isinstance(override_value, (bool, int, float)):
         return override_value >= base_value
-
-    # Numbers: Lower values are more restrictive (shorter timeouts,
-    # fewer retries, smaller batch sizes).
-    if isinstance(override_value, (int, float)):
-        return override_value <= base_value
 
     # Lists: override must be a subset of base (narrowing is restrictive)
     if isinstance(override_value, list):

@@ -31,9 +31,11 @@ def load_config(defaults=None, config_path=None, env_prefix="APP"):
 
     if config_path:
         file_config = load_file(config_path)
-        # Resolve variable references in the file configuration
-        file_config = interpolate(file_config)
         result = deep_merge(result, file_config)
+
+    # Resolve variable references after file config is merged with defaults,
+    # but before env overrides (env values should not be interpolated)
+    result = interpolate(result)
 
     env_config = load_env(env_prefix)
     result = deep_merge(result, env_config)

@@ -71,5 +71,5 @@ def _set_nested(config, dotted_key, value):
             return
         current = current[part]
 
-    if value:
+    if value is not None and value != "":
         current[parts[-1]] = value
