@@ -82,3 +82,23 @@ class TestSetNested:
         config = {"a": {"existing": 1}}
         _set_nested(config, "a.new_key", "value")
         assert config == {"a": {"existing": 1, "new_key": "value"}}
+
+    def test_skips_empty_and_none_values(self):
+        """Empty string and None values should not be stored in config.
+
+        This prevents blank environment variables from polluting the
+        config with meaningless entries.
+        """
+        config = {}
+        _set_nested(config, "a", "")
+        _set_nested(config, "b", None)
+        assert "a" not in config
+        assert "b" not in config
+
+    def test_load_env_skips_empty_values(self):
+        """Empty env var values should not appear in the loaded config."""
+        env = {"APP_EMPTY": "", "APP_REAL": "hello"}
+        with mock.patch.dict(os.environ, env, clear=True):
+            result = load_env("APP")
+        assert "empty" not in result
+        assert result["real"] == "hello"
