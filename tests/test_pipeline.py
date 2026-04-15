@@ -56,3 +56,15 @@ class TestPipeline:
         with mock.patch.dict(os.environ, {}, clear=True):
             result = load_config(config_path=str(config_file))
         assert result["database"]["url"] == "jdbc://db.production:5432/app"
+
+    def test_env_literal_dollar_preserved(self):
+        """Environment variable values with ${} syntax should be kept as-is.
+
+        Only file config values should be interpolated, not env var values.
+        This prevents unexpected resolution of template-style env vars.
+        """
+        defaults = {"host": "localhost"}
+        env = {"APP_CONNECT_STRING": "http://${host}:8080"}
+        with mock.patch.dict(os.environ, env, clear=True):
+            result = load_config(defaults, env_prefix="APP")
+        assert result["connect_string"] == "http://${host}:8080"

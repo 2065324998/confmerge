@@ -39,7 +39,7 @@ def _deep_merge(target, override, list_strategy="extend"):
             if override[key]:
                 target[key] = override[key]
         elif isinstance(target[key], dict) and isinstance(override[key], dict):
-            _deep_merge(target[key], override[key], strategy)
+            _deep_merge(target[key], override[key], list_strategy)
         elif isinstance(target[key], list) and isinstance(override[key], list):
             if strategy == "replace":
                 target[key] = list(override[key])
